@@ -1,0 +1,23 @@
+const { expect, test } = require("@playwright/test");
+
+test('@web Clent App using special locators', async({page})=>{
+    await page.goto("https://www.saucedemo.com/")
+    await page.getByPlaceholder("Username").fill("standard_user")
+    await page.getByPlaceholder("Password").fill("secret_sauce")
+    await page.getByRole("button",{name:'Login'}).click()
+    await page.waitForLoadState('networkidle')
+    await page.getByLabel("Sauce Labs Backpack").first().click()
+    await page.getByRole("button",{name:'Add to cart'}).click()
+    await page.locator("#shopping_cart_container").click()
+    await expect(page.getByLabel("Sauce Labs Backpack")).toBeVisible()
+    await page.getByRole("button",{name:'Checkout'}).click()
+    await page.getByPlaceholder("First Name").fill("Neva")
+    await page.getByPlaceholder("Last Name").fill("Tom")
+    await page.getByPlaceholder("Zip/Postal Code").fill("N2Q 5G8")
+    await page.getByRole("button",{name:'Continue'}).click()
+    await page.getByLabel("Sauce Labs Backpack").first().waitFor()
+    await expect(page.getByText("Item total: $29.99")).toBeVisible()
+    await page.getByRole("button",{name:'Finish'}).click()
+    await expect(page.getByText("Thank you for your order!")).toBeVisible()
+    //await page.pause()
+})
